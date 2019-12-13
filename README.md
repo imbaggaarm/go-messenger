@@ -21,11 +21,11 @@ alternative to pymessenger.
 - [x] [Set persistent menu](https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/persistent-menu) - SetPersistentMenu(pmPayload)
 - [x] [Remove persistent menu](https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/#delete) - RemovePersistentMenu()
 ## Getting Started
-###Installation
+### Installation
 ```
 go get github.com/imbaggaarm/go-messenger
 ```
-###Example
+### Example
 ```
 import . "github.com/imbaggaarm/go-messenger"
 

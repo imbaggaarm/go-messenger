@@ -14,8 +14,8 @@ const kAccessToken = "access_token"
 // Graph Api for facebook messenger api
 type GraphApi struct {
 	AccessToken string
-	ApiVersion string
-	GraphUrl string
+	ApiVersion  string
+	GraphUrl    string
 }
 
 type Bot struct {
@@ -26,7 +26,7 @@ func (self *Bot) sendRaw(payload interface{}) (*http.Response, error) {
 	requestEndpoint := self.GraphUrl + "/me/messages"
 
 	client := &http.Client{
-		Timeout:        time.Second + 10,
+		Timeout: time.Second + 10,
 	}
 
 	body := new(bytes.Buffer)

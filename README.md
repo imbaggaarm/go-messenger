@@ -1,4 +1,39 @@
 # go-messenger [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](https://opensource.org/licenses/MIT)
-A Golang package for [Facebook Messenger API](https://developers.facebook.com/docs/messenger-platform)
+A [Facebook Messenger API](https://developers.facebook.com/docs/messenger-platform) wrapper written in Golang,
+alternative to pymessenger.
 
-**Disclaimer**: This wrapper is **NOT** an official wrapper and do not attempt to represent Facebook in anyway. 
+## Features
+- [x] [Send raw message](https://developers.facebook.com/docs/messenger-platform/reference/send-api/) - SendRawMessage(payload)
+- [x] [Send action](https://developers.facebook.com/docs/messenger-platform/send-api-reference/sender-actions) - SendAction(recipientId, action, notificationType)
+- [x] [Send message](https://developers.facebook.com/docs/messenger-platform/send-messages) - SendMessage(recipientId, message)
+- [x] [Send text message](https://developers.facebook.com/docs/messenger-platform/send-messages#sending_text) - SendTextMessage(recipientId, text)
+- [x] [Send quick replies](https://developers.facebook.com/docs/messenger-platform/send-messages/quick-replies) - SendQuickReplies(recipientId, text, quickReplies)
+- [x] [Send attachment message](https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments) - SendAttachmentMessage(recipientId, attachment)
+- [x] [Send attachment with url](https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments) - SendAttachmentUrl(recipientId, attachmentType)
+- [x] [Send generic message](https://developers.facebook.com/docs/messenger-platform/reference/template/generic) - SendGenericMessage(recipientId, elements)
+- [x] [Send button message](https://developers.facebook.com/docs/messenger-platform/send-messages/buttons) - SendButtonMessage(recipientId, text, buttons)
+- [x] [Send image with url](https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments) - SendImageUrl(recipientId, imageUrl)
+- [x] [Send audio with url](https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments) - SendAudioUrl(recipientId, audioUrl)
+- [x] [Send video with url](https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments) - SendVideoUrl(recipientId, videoUrl)
+- [x] [Send file with url](https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments) - SendFileUrl(recipientId, fileUrl)
+- [x] [Set get started button](https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/get-started-button) - SetGetStarted(gsPayload)
+- [x] [Remove get started button](https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/#delete) - RemoveGetStarted()
+- [x] [Set persistent menu](https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/persistent-menu) - SetPersistentMenu(pmPayload)
+- [x] [Remove persistent menu](https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/#delete) - RemovePersistentMenu()
+## Getting Started
+###Installation
+```
+go get github.com/imbaggaarm/go-messenger
+```
+###Example
+```
+import . "github.com/imbaggaarm/go-messenger"
+
+apiVersion :=  DefaultApiVersion // or the version that you want
+bot = NewBot(accessToken, apiVersion)
+
+textMessage := "Hello! Can you hear me?"
+bot.sendTextMessage(recipientId, textMessage)
+```
+
+ 

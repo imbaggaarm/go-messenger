@@ -60,6 +60,7 @@ type Bot struct {
 }
 
 // Create a new Bot instance with your page access token, and an api version.
+//
 // Input:
 // 		accessToken: your page access token
 //		apiVersion: specified api version, use DefaultAPIVersion if you want to use default api version
@@ -78,6 +79,7 @@ func NewBot(accessToken string, apiVersion string) *Bot {
 
 // Send raw message with a sub path, a httpMethod, and a payload object
 // This method can not be used outside the package
+//
 // Input:
 // 		requestSubPath: sub path of endpoint
 // 		method: http method of this request
@@ -131,6 +133,7 @@ func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (
 
 // Send raw message with a payload instance
 // https://developers.facebook.com/docs/messenger-platform/reference/send-api/
+//
 // Input:
 // 		payload: a Payload object to send
 // Output:
@@ -141,6 +144,7 @@ func (bot *Bot) SendRawMessage(payload Payload) (*http.Response, error) {
 
 // Send message to a recipient with recipientId
 // https://developers.facebook.com/docs/messenger-platform/reference/send-api/
+//
 // Input:
 // 		recipientId: recipient id to send to
 // 		payload: a Payload object to send
@@ -155,6 +159,7 @@ func (bot *Bot) SendRecipient(recipientId string, payload Payload, notificationT
 
 // Send typing indicators or send read receipts to the specified recipient.
 // https://developers.facebook.com/docs/messenger-platform/send-api-reference/sender-actions
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		action: action type (mark_seen, typing_on, typing_off)
@@ -167,6 +172,7 @@ func (bot *Bot) SendAction(recipientId string, action SenderAction, notification
 
 // Send message to the specified recipient.
 // https://developers.facebook.com/docs/messenger-platform/send-messages
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		message: a Message object
@@ -182,6 +188,7 @@ func (bot *Bot) SendMessage(recipientId string, message Message) (*http.Response
 
 // Send text message to the specified recipient.
 // https://developers.facebook.com/docs/messenger-platform/send-messages#sending_text
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		text: a text message
@@ -196,6 +203,7 @@ func (bot *Bot) SendTextMessage(recipientId string, text string) (*http.Response
 
 // Send quick replies to the specified recipient.
 // https://developers.facebook.com/docs/messenger-platform/send-messages/quick-replies
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		text: title of message
@@ -212,6 +220,7 @@ func (bot *Bot) SendQuickReplies(recipientId string, text string, quickReplies [
 
 // Send attachment message to the specified recipient.
 // https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		attachment: an attachment
@@ -226,6 +235,7 @@ func (bot *Bot) SendAttachmentMessage(recipientId string, attachment Attachment)
 
 // Send attachment message to the specified recipient using URL.
 // https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		attachmentType: type of the attachment
@@ -242,6 +252,7 @@ func (bot *Bot) SendAttachmentUrl(recipientId string, attachmentType AttachmentT
 
 // Send generic message to the specified recipient.
 // https://developers.facebook.com/docs/messenger-platform/reference/template/generic
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		elements: an array of Element objects, can up to 10 elements
@@ -260,6 +271,7 @@ func (bot *Bot) SendGenericMessage(recipientId string, elements []Element) (*htt
 
 // Send button message to the specified recipient.
 // https://developers.facebook.com/docs/messenger-platform/send-messages/buttons
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		text: text of message to send
@@ -280,6 +292,7 @@ func (bot *Bot) SendButtonMessage(recipientId string, text string, buttons []But
 
 // Send an image message with image url
 // https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		imageUrl: url of the image that we want to send
@@ -291,6 +304,7 @@ func (bot *Bot) SendImageUrl(recipientId string, imageUrl string) (*http.Respons
 
 // Send an audio message with audio url
 // https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		imageUrl: url of the audio to send
@@ -302,6 +316,7 @@ func (bot *Bot) SendAudioUrl(recipientId string, audioUrl string) (*http.Respons
 
 // Send a video message with video url
 // https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		videoUrl: url of the video to send
@@ -313,6 +328,7 @@ func (bot *Bot) SendVideoUrl(recipientId string, videoUrl string) (*http.Respons
 
 // Send file with file url
 // https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+//
 // Input:
 // 		recipientID: recipient id to send to
 // 		fileUrl: url of the file
@@ -324,6 +340,7 @@ func (bot *Bot) SendFileUrl(recipientId string, fileUrl string) (*http.Response,
 
 // Set a get started button for the page, this button will be shown on welcome screen for new users
 // https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/get-started-button
+//
 // Input:
 // 		gsPayload: a Payload object has GetStarted property as described by the API docs
 // Output:
@@ -334,6 +351,7 @@ func (bot *Bot) SetGetStarted(gsPayload Payload) (*http.Response, error) {
 
 // Remove get started button from the page
 // https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/#delete
+//
 // Output:
 // 		Response from API and an error if exists
 func (bot *Bot) RemoveGetStarted() (*http.Response, error) {
@@ -343,6 +361,7 @@ func (bot *Bot) RemoveGetStarted() (*http.Response, error) {
 
 // Set a persistent menu for the page. You have to set a get started button before use this
 // https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/persistent-menu
+//
 // Input:
 // 		pmPayload: a Payload object which has PersistentMenu property as described by the API docs
 // Output:
@@ -353,6 +372,7 @@ func (bot *Bot) SetPersistentMenu(pmPayload Payload) (*http.Response, error) {
 
 // Remove persistent menu from the page
 // https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/#delete
+//
 // Output:
 // 		Response from API and an error if exists
 func (bot *Bot) RemovePersistentMenu() (*http.Response, error) {

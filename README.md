@@ -26,7 +26,7 @@ alternative to pymessenger.
 go get github.com/imbaggaarm/go-messenger
 ```
 ### Example
-```
+```Go
 import . "github.com/imbaggaarm/go-messenger"
 
 apiVersion :=  DefaultApiVersion // or the version that you want

@@ -23,7 +23,7 @@ alternative to pymessenger.
 ## Getting Started
 ### Installation
 ```
-go get github.com/imbaggaarm/go-messenger
+go get -u github.com/imbaggaarm/go-messenger
 ```
 ### Example
 ```Go

@@ -17,7 +17,7 @@ type (
 const (
 	kGraphUrl         = "https://graph.facebook.com/v"
 	kAccessToken      = "access_token"
-	defaultAPIVersion = 2.6
+	DefaultAPIVersion = 2.6
 
 	NotificationTypeRegular    = NotificationType("REGULAR")
 	NotificationTypeSilentPush = NotificationType("SILENT_PUSH")
@@ -58,11 +58,15 @@ type Bot struct {
 	GraphUrl    string
 }
 
-// Create new bot with your page access token, and an api version.
-// To use default version
+// Create a new Bot instance with your page access token, and an api version.
+// Input:
+// 		accessToken: your page access token
+//		apiVersion: specified api version, use DefaultAPIVersion if you want to use default api version
+// Output:
+// 		A Bot instance
 func NewBot(accessToken string, apiVersion int) *Bot {
 	if apiVersion <= 0 {
-		apiVersion = defaultAPIVersion
+		apiVersion = DefaultAPIVersion
 	}
 	return &Bot{
 		AccessToken: accessToken,
@@ -71,13 +75,23 @@ func NewBot(accessToken string, apiVersion int) *Bot {
 	}
 }
 
+// Send raw message with a sub path, a httpMethod, and a payload object
+// This method can not be used outside the package
+// Input:
+// 		requestSubPath: sub path of endpoint
+// 		method: http method of this request
+// 		payload: a Payload object to send
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (*http.Response, error) {
+	// Create request endpoint with given sub path
 	requestEndpoint := bot.GraphUrl + requestSubPath
 
 	client := &http.Client{
 		Timeout: time.Second * 10,
 	}
 
+	// Encode the payload into request body
 	body := new(bytes.Buffer)
 	if err := json.NewEncoder(body).Encode(payload); err != nil {
 		log.Println(err.Error())
@@ -92,6 +106,7 @@ func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (
 	q.Add(kAccessToken, bot.AccessToken)
 	req.URL.RawQuery = q.Encode()
 
+	// Start the request
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Error request:", err.Error())
@@ -113,21 +128,49 @@ func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (
 	return resp, err
 }
 
+// Send raw message with a payload instance
+// https://developers.facebook.com/docs/messenger-platform/reference/send-api/
+// Input:
+// 		payload: a Payload object to send
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendRawMessage(payload Payload) (*http.Response, error) {
 	return bot.sendRaw("/me/messages", http.MethodPost, payload)
 }
 
+// Send message to a recipient with recipientId
+// https://developers.facebook.com/docs/messenger-platform/reference/send-api/
+// Input:
+// 		recipientId: recipient id to send to
+// 		payload: a Payload object to send
+// 		notificationType: type of notification, see NotificationType
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendRecipient(recipientId string, payload Payload, notificationType NotificationType) (*http.Response, error) {
 	payload.Recipient = Recipient{Id: recipientId}
 	payload.NotificationType = notificationType
 	return bot.SendRawMessage(payload)
 }
 
+// Send typing indicators or send read receipts to the specified recipient.
+// https://developers.facebook.com/docs/messenger-platform/send-api-reference/sender-actions
+// Input:
+// 		recipientID: recipient id to send to
+// 		action: action type (mark_seen, typing_on, typing_off)
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendAction(recipientId string, action SenderAction, notificationType NotificationType) (*http.Response, error) {
 	payload := Payload{SenderAction: action}
 	return bot.SendRecipient(recipientId, payload, notificationType)
 }
 
+// Send message to the specified recipient.
+// https://developers.facebook.com/docs/messenger-platform/send-messages
+// Input:
+// 		recipientID: recipient id to send to
+// 		message: a Message object
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendMessage(recipientId string, message Message) (*http.Response, error) {
 	payload := Payload{
 		Recipient: Recipient{Id: recipientId},
@@ -136,6 +179,13 @@ func (bot *Bot) SendMessage(recipientId string, message Message) (*http.Response
 	return bot.SendRawMessage(payload)
 }
 
+// Send text message to the specified recipient.
+// https://developers.facebook.com/docs/messenger-platform/send-messages#sending_text
+// Input:
+// 		recipientID: recipient id to send to
+// 		text: a text message
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendTextMessage(recipientId string, text string) (*http.Response, error) {
 	message := Message{
 		Text: text,
@@ -143,6 +193,14 @@ func (bot *Bot) SendTextMessage(recipientId string, text string) (*http.Response
 	return bot.SendMessage(recipientId, message)
 }
 
+// Send quick replies to the specified recipient.
+// https://developers.facebook.com/docs/messenger-platform/send-messages/quick-replies
+// Input:
+// 		recipientID: recipient id to send to
+// 		text: title of message
+// 		quickReplies: an array of QuickReply objects, up to 13 elements
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendQuickReplies(recipientId string, text string, quickReplies []QuickReply) (*http.Response, error) {
 	message := Message{
 		Text:         text,
@@ -151,6 +209,13 @@ func (bot *Bot) SendQuickReplies(recipientId string, text string, quickReplies [
 	return bot.SendMessage(recipientId, message)
 }
 
+// Send attachment message to the specified recipient.
+// https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+// Input:
+// 		recipientID: recipient id to send to
+// 		attachment: an attachment
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendAttachmentMessage(recipientId string, attachment Attachment) (*http.Response, error) {
 	message := Message{
 		Attachment: attachment,
@@ -158,6 +223,14 @@ func (bot *Bot) SendAttachmentMessage(recipientId string, attachment Attachment)
 	return bot.SendMessage(recipientId, message)
 }
 
+// Send attachment message to the specified recipient using URL.
+// https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+// Input:
+// 		recipientID: recipient id to send to
+// 		attachmentType: type of the attachment
+// 		attachmentUrl: url of the attachment
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendAttachmentUrl(recipientId string, attachmentType AttachmentType, attachmentUrl string) (*http.Response, error) {
 	attachment := Attachment{
 		Type:    attachmentType,
@@ -166,7 +239,14 @@ func (bot *Bot) SendAttachmentUrl(recipientId string, attachmentType AttachmentT
 	return bot.SendAttachmentMessage(recipientId, attachment)
 }
 
-func (bot *Bot) SendGenericMessage(recipientId string, elements interface{}) (*http.Response, error) {
+// Send generic message to the specified recipient.
+// https://developers.facebook.com/docs/messenger-platform/reference/template/generic
+// Input:
+// 		recipientID: recipient id to send to
+// 		elements: an array of Element objects, can up to 10 elements
+// Output:
+// 		Response from API and an error if exists
+func (bot *Bot) SendGenericMessage(recipientId string, elements []Element) (*http.Response, error) {
 	attachment := Attachment{
 		Type: AttachmentTypeTemplate,
 		Payload: AttachmentPayload{
@@ -177,6 +257,14 @@ func (bot *Bot) SendGenericMessage(recipientId string, elements interface{}) (*h
 	return bot.SendAttachmentMessage(recipientId, attachment)
 }
 
+// Send button message to the specified recipient.
+// https://developers.facebook.com/docs/messenger-platform/send-messages/buttons
+// Input:
+// 		recipientID: recipient id to send to
+// 		text: text of message to send
+// 		buttons: An array of Button objects, can up to 3 buttons
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendButtonMessage(recipientId string, text string, buttons []Button) (*http.Response, error) {
 	attachment := Attachment{
 		Type: AttachmentTypeTemplate,
@@ -189,35 +277,83 @@ func (bot *Bot) SendButtonMessage(recipientId string, text string, buttons []But
 	return bot.SendAttachmentMessage(recipientId, attachment)
 }
 
+// Send an image message with image url
+// https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+// Input:
+// 		recipientID: recipient id to send to
+// 		imageUrl: url of the image that we want to send
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendImageUrl(recipientId string, imageUrl string) (*http.Response, error) {
 	return bot.SendAttachmentUrl(recipientId, AttachmentTypeImage, imageUrl)
 }
 
+// Send an audio message with audio url
+// https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+// Input:
+// 		recipientID: recipient id to send to
+// 		imageUrl: url of the audio to send
+// Output:
+// 		Response from API and and error if exists
 func (bot *Bot) SendAudioUrl(recipientId string, audioUrl string) (*http.Response, error) {
 	return bot.SendAttachmentUrl(recipientId, AttachmentTypeAudio, audioUrl)
 }
 
+// Send a video message with video url
+// https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+// Input:
+// 		recipientID: recipient id to send to
+// 		videoUrl: url of the video to send
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendVideoUrl(recipientId string, videoUrl string) (*http.Response, error) {
 	return bot.SendAttachmentUrl(recipientId, AttachmentTypeVideo, videoUrl)
 }
 
+// Send file with file url
+// https://developers.facebook.com/docs/messenger-platform/send-messages#sending_attachments
+// Input:
+// 		recipientID: recipient id to send to
+// 		fileUrl: url of the file
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SendFileUrl(recipientId string, fileUrl string) (*http.Response, error) {
 	return bot.SendAttachmentUrl(recipientId, AttachmentTypeFile, fileUrl)
 }
 
+// Set a get started button for the page, this button will be shown on welcome screen for new users
+// https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/get-started-button
+// Input:
+// 		gsPayload: a Payload object has GetStarted property as described by the API docs
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SetGetStarted(gsPayload Payload) (*http.Response, error) {
 	return bot.sendRaw("/me/messenger_profile", http.MethodPost, gsPayload)
 }
 
+// Remove get started button from the page
+// https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/#delete
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) RemoveGetStarted() (*http.Response, error) {
 	payload := Payload{DeletedFields: []string{"get_started"}}
 	return bot.sendRaw("/me/messenger_profile", http.MethodDelete, payload)
 }
 
+// Set a persistent menu for the page. You have to set a get started button before use this
+// https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/persistent-menu
+// Input:
+// 		pmPayload: a Payload object which has PersistentMenu property as described by the API docs
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) SetPersistentMenu(pmPayload Payload) (*http.Response, error) {
 	return bot.sendRaw("/me/messenger_profile", http.MethodPost, pmPayload)
 }
 
+// Remove persistent menu from the page
+// https://developers.facebook.com/docs/messenger-platform/reference/messenger-profile-api/#delete
+// Output:
+// 		Response from API and an error if exists
 func (bot *Bot) RemovePersistentMenu() (*http.Response, error) {
 	payload := Payload{DeletedFields: []string{"persistent_menu"}}
 	return bot.sendRaw("/me/messenger_profile", http.MethodDelete, payload)

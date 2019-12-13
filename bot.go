@@ -17,7 +17,7 @@ type (
 const (
 	kGraphUrl         = "https://graph.facebook.com/v"
 	kAccessToken      = "access_token"
-	DefaultApiVersion = 2.6
+	DefaultApiVersion = "2.6"
 
 	NotificationTypeRegular    = NotificationType("REGULAR")
 	NotificationTypeSilentPush = NotificationType("SILENT_PUSH")
@@ -54,7 +54,7 @@ type (
 
 type Bot struct {
 	AccessToken string
-	ApiVersion  int
+	ApiVersion  string
 	GraphUrl    string
 }
 
@@ -64,8 +64,8 @@ type Bot struct {
 //		apiVersion: specified api version, use DefaultAPIVersion if you want to use default api version
 // Output:
 // 		A Bot instance
-func NewBot(accessToken string, apiVersion int) *Bot {
-	if apiVersion <= 0 {
+func NewBot(accessToken string, apiVersion string) *Bot {
+	if apiVersion == "" {
 		apiVersion = DefaultApiVersion
 	}
 	return &Bot{

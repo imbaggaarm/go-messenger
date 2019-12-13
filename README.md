@@ -35,5 +35,12 @@ bot = NewBot(accessToken, apiVersion)
 textMessage := "Hello! Can you hear me?"
 bot.sendTextMessage(recipientId, textMessage)
 ```
-
- 
+## Other
+### Future of go-messenger
+There are a lot of missing functions in this package, 
+I'm planning to make this better and better in the future. Here are some things will be implemented soon:
+- An example (chat with strangers)
+- Attachment with file messages
+### Contact
+Follow and contact me on [Twitter](). If you find an issue, just [open a ticket](). 
+Pull requests are warmly welcome as well.

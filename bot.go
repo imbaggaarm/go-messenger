@@ -1,3 +1,4 @@
+// go-messenger is a wrapper for Facebook Messenger API alternative to pymessenger
 package go_messenger
 
 import (

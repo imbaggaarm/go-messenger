@@ -59,12 +59,12 @@ type Bot struct {
 }
 
 // Create new bot with your page access token, and an api version.
-// If you want to use
-func NewBot(accessToken string, apiVersion int) Bot {
-	if apiVersion == -1 {
+// To use default version
+func NewBot(accessToken string, apiVersion int) *Bot {
+	if apiVersion <= 0 {
 		apiVersion = defaultAPIVersion
 	}
-	return Bot{
+	return &Bot{
 		AccessToken: accessToken,
 		ApiVersion:  apiVersion,
 		GraphUrl:    kGraphUrl + string(apiVersion),

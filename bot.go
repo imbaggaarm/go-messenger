@@ -141,6 +141,7 @@ func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (
 // Output:
 // 		Response from API and an error if exists
 func (bot *Bot) SendRawMessage(payload Payload) (*http.Response, error) {
+	log.Println(payload)
 	return bot.sendRaw("/me/messages", http.MethodPost, payload)
 }
 

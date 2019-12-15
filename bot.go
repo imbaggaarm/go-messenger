@@ -4,6 +4,7 @@ package messenger
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -103,6 +104,10 @@ func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (
 		return nil, err
 	}
 
+	fmt.Println("Payload :")
+	fmt.Printf("%+v\n", payload)
+	fmt.Println("End payload printing")
+
 	req, _ := http.NewRequest(method, requestEndpoint, body)
 	req.Header.Add("Content-Type", "application/json")
 
@@ -141,7 +146,6 @@ func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (
 // Output:
 // 		Response from API and an error if exists
 func (bot *Bot) SendRawMessage(payload Payload) (*http.Response, error) {
-	log.Println(payload)
 	return bot.sendRaw("/me/messages", http.MethodPost, payload)
 }
 

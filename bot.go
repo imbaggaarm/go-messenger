@@ -1,5 +1,5 @@
 // go-messenger is a wrapper for Facebook Messenger API alternative to pymessenger
-package go_messenger
+package messenger
 
 import (
 	"bytes"
@@ -43,9 +43,11 @@ type (
 	Recipient struct {
 		Id string `json:"id"`
 	}
+
 	GetStarted struct {
 		Payload string `json:"payload"`
 	}
+
 	PersistentMenu struct {
 		Locale                string   `json:"locale"`
 		ComposerInputDisabled bool     `json:"composer_input_disabled"`
@@ -116,12 +118,12 @@ func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (
 		return resp, err
 	}
 
+	defer resp.Body.Close()
+
 	if err := json.NewEncoder(body).Encode(resp.Body); err != nil {
 		log.Println(err.Error())
 		return resp, err
 	}
-
-	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
 		log.Println("Error http response -> %v", resp)

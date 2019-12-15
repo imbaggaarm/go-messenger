@@ -1,4 +1,4 @@
-package go_messenger
+package messenger
 
 type (
 	TemplateType   string

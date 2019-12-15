@@ -198,7 +198,7 @@ func (bot *Bot) SendMessage(recipientId string, message Message) (*http.Response
 // 		Response from API and an error if exists
 func (bot *Bot) SendTextMessage(recipientId string, text string) (*http.Response, error) {
 	message := Message{
-		Text: text,
+		Text: &text,
 	}
 	return bot.SendMessage(recipientId, message)
 }
@@ -214,8 +214,8 @@ func (bot *Bot) SendTextMessage(recipientId string, text string) (*http.Response
 // 		Response from API and an error if exists
 func (bot *Bot) SendQuickReplies(recipientId string, text string, quickReplies []QuickReply) (*http.Response, error) {
 	message := Message{
-		Text:         text,
-		QuickReplies: quickReplies,
+		Text:         &text,
+		QuickReplies: &quickReplies,
 	}
 	return bot.SendMessage(recipientId, message)
 }
@@ -230,7 +230,7 @@ func (bot *Bot) SendQuickReplies(recipientId string, text string, quickReplies [
 // 		Response from API and an error if exists
 func (bot *Bot) SendAttachmentMessage(recipientId string, attachment Attachment) (*http.Response, error) {
 	message := Message{
-		Attachment: attachment,
+		Attachment: &attachment,
 	}
 	return bot.SendMessage(recipientId, message)
 }

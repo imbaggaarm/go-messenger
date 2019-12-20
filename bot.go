@@ -222,7 +222,7 @@ func (bot *Bot) SendTextMessage(recipientID string, text string) (*http.Response
 func (bot *Bot) SendQuickReplies(recipientID string, text string, quickReplies []QuickReply) (*http.Response, error) {
 	message := Message{
 		Text:         text,
-		QuickReplies: &quickReplies,
+		QuickReplies: quickReplies,
 	}
 	return bot.SendMessage(recipientID, message)
 }

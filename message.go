@@ -26,9 +26,10 @@ const (
 
 type (
 	Message struct {
-		Text         *string       `json:"text,omitempty"`
-		Attachment   *Attachment   `json:"attachment,omitempty"`
-		QuickReplies *[]QuickReply `json:"quick_replies,omitempty"`
+		Metadata     string       `json:"metadata,omitempty"`
+		Text         string       `json:"text,omitempty"`
+		Attachment   *Attachment  `json:"attachment,omitempty"`
+		QuickReplies []QuickReply `json:"quick_replies,omitempty"`
 	}
 
 	Attachment struct {
@@ -52,11 +53,11 @@ type (
 	}
 
 	Element struct {
-		Title         string        `json:"title"`
-		Subtitle      string        `json:"subtitle,omitempty"`
-		ImageURL      string        `json:"image_url,omitempty"`
-		DefaultAction DefaultAction `json:"default_action,omitempty"`
-		Buttons       []Button      `json:"buttons,omitempty"`
+		Title         string         `json:"title"`
+		Subtitle      string         `json:"subtitle,omitempty"`
+		ImageURL      string         `json:"image_url,omitempty"`
+		DefaultAction *DefaultAction `json:"default_action,omitempty"`
+		Buttons       []Button       `json:"buttons,omitempty"`
 	}
 
 	DefaultAction struct {

@@ -29,7 +29,7 @@ type WebhookEvent struct {
 }
 
 type Entry struct {
-	Id        string          `json:"id"`
+	ID        string          `json:"id"`
 	Time      int             `json:"time"`
 	Messaging *[]EntryMessage `json:"messaging,omitempty"`
 	Standby   *[]EntryMessage `json:"standby,omitempty"`
@@ -57,15 +57,26 @@ type EntryMessage struct {
 }
 
 type Sender struct {
-	Id string `json:"id"`
+	ID string `json:"id"`
+}
+
+type MessageEcho struct {
+	IsEcho   bool   `json:"is_echo,omitempty"`
+	AppID    string `json:"app_id,omitempty"`
+	Metadata string `json:"metadata,omitempty"`
+	Mid      string `json:"mid,omitempty"`
 }
 
 type WebhookMessage struct { //message and message_echoes
-	Message
-	IsEcho   bool   `json:"is_echo,omitempty"`
-	AppId    string `json:"app_id,omitempty"`
-	Metadata string `json:"metadata,omitempty"`
-	Mid      string `json:"mid,omitempty"`
+	MessageEcho
+	Text        *string       `json:"text,omitempty"`
+	Attachments *[]Attachment `json:"attachments,omitempty"`
+	QuickReply  *QuickReply   `json:"quick_reply,omitempty"`
+	ReplyTo     *ReplyTo      `json:"reply_to,omitempty"`
+}
+
+type ReplyTo struct {
+	Mid string `json:"mid,omitempty"`
 }
 
 type AccountLinking struct {
@@ -79,20 +90,20 @@ type MessageDelivery struct {
 }
 
 type GamePlay struct {
-	GameId      string `json:"game_id"`
-	PlayerId    string `json:"player_id"`
+	GameID      string `json:"game_id"`
+	PlayerID    string `json:"player_id"`
 	ContextType string `json:"context_type"`
-	ContextId   string `json:"context_id,omitempty"`
+	ContextID   string `json:"context_id,omitempty"`
 	Score       int    `json:"score,omitempty"`
 	Payload     string `json:"payload,omitempty"`
 }
 
 type Handover struct {
 	Metadata            string `json:"metadata,omitempty"`
-	NewOwnerAppId       string `json:"new_owner_app_id,omitempty"`
-	PreviousOwnerAppId  string `json:"previous_owner_app_id,omitempty"`
-	RequestedOwnerAppId string `json:"requested_owner_app_id,omitempty"`
-	//pageId
+	NewOwnerAppID       string `json:"new_owner_app_id,omitempty"`
+	PreviousOwnerAppID  string `json:"previous_owner_app_id,omitempty"`
+	RequestedOwnerAppID string `json:"requested_owner_app_id,omitempty"`
+	//pageID
 }
 
 type Optin struct {

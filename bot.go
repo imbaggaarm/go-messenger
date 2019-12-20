@@ -32,21 +32,21 @@ const (
 
 type (
 	Payload struct {
-		Recipient        Recipient        `json:"recipient,omitempty"`
-		GetStarted       GetStarted       `json:"get_started,omitempty"`
+		Recipient        *Recipient       `json:"recipient,omitempty"`
+		GetStarted       *GetStarted      `json:"get_started,omitempty"`
 		PersistentMenu   []PersistentMenu `json:"persistent_menu,omitempty"`
 		NotificationType NotificationType `json:"notification_type,omitempty"`
 		SenderAction     SenderAction     `json:"sender_action,omitempty"`
 		DeletedFields    []string         `json:"fields,omitempty"`
-		Message          Message          `json:"message,omitempty"`
+		Message          *Message         `json:"message,omitempty"`
 	}
 
 	Recipient struct {
-		Id string `json:"id"`
+		ID string `json:"id"`
 	}
 
 	GetStarted struct {
-		Payload string `json:"payload"`
+		Payload string `json:"payload,omitempty"`
 	}
 
 	PersistentMenu struct {
@@ -76,7 +76,7 @@ func NewBot(accessToken string, apiVersion string) *Bot {
 	return &Bot{
 		AccessToken: accessToken,
 		ApiVersion:  apiVersion,
-		GraphUrl:    kGraphUrl + string(apiVersion),
+		GraphUrl:    kGraphUrl + apiVersion,
 	}
 }
 
@@ -90,6 +90,9 @@ func NewBot(accessToken string, apiVersion string) *Bot {
 // Output:
 // 		Response from API and an error if exists
 func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (*http.Response, error) {
+
+	fmt.Println("--------------------")
+	defer fmt.Println("--------------------")
 	// Create request endpoint with given sub path
 	requestEndpoint := bot.GraphUrl + requestSubPath
 
@@ -104,9 +107,8 @@ func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (
 		return nil, err
 	}
 
-	fmt.Println("Payload :")
-	fmt.Printf("%+v\n", payload)
-	fmt.Println("End payload printing")
+	jsonPayload, _ := json.MarshalIndent(payload, "", "\t")
+	fmt.Println(string(jsonPayload))
 
 	req, _ := http.NewRequest(method, requestEndpoint, body)
 	req.Header.Add("Content-Type", "application/json")
@@ -149,17 +151,17 @@ func (bot *Bot) SendRawMessage(payload Payload) (*http.Response, error) {
 	return bot.sendRaw("/me/messages", http.MethodPost, payload)
 }
 
-// Send message to a recipient with recipientId
+// Send message to a recipient with recipientID
 // https://developers.facebook.com/docs/messenger-platform/reference/send-api/
 //
 // Input:
-// 		recipientId: recipient id to send to
+// 		recipientID: recipient id to send to
 // 		payload: a Payload object to send
 // 		notificationType: type of notification, see NotificationType
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendRecipient(recipientId string, payload Payload, notificationType NotificationType) (*http.Response, error) {
-	payload.Recipient = Recipient{Id: recipientId}
+func (bot *Bot) SendRecipient(recipientID string, payload Payload, notificationType NotificationType) (*http.Response, error) {
+	payload.Recipient = &Recipient{ID: recipientID}
 	payload.NotificationType = notificationType
 	return bot.SendRawMessage(payload)
 }
@@ -172,9 +174,9 @@ func (bot *Bot) SendRecipient(recipientId string, payload Payload, notificationT
 // 		action: action type (mark_seen, typing_on, typing_off)
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendAction(recipientId string, action SenderAction, notificationType NotificationType) (*http.Response, error) {
+func (bot *Bot) SendAction(recipientID string, action SenderAction, notificationType NotificationType) (*http.Response, error) {
 	payload := Payload{SenderAction: action}
-	return bot.SendRecipient(recipientId, payload, notificationType)
+	return bot.SendRecipient(recipientID, payload, notificationType)
 }
 
 // Send message to the specified recipient.
@@ -185,10 +187,10 @@ func (bot *Bot) SendAction(recipientId string, action SenderAction, notification
 // 		message: a Message object
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendMessage(recipientId string, message Message) (*http.Response, error) {
+func (bot *Bot) SendMessage(recipientID string, message Message) (*http.Response, error) {
 	payload := Payload{
-		Recipient: Recipient{Id: recipientId},
-		Message:   message,
+		Recipient: &Recipient{ID: recipientID},
+		Message:   &message,
 	}
 	return bot.SendRawMessage(payload)
 }
@@ -201,11 +203,11 @@ func (bot *Bot) SendMessage(recipientId string, message Message) (*http.Response
 // 		text: a text message
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendTextMessage(recipientId string, text string) (*http.Response, error) {
+func (bot *Bot) SendTextMessage(recipientID string, text string) (*http.Response, error) {
 	message := Message{
-		Text: &text,
+		Text: text,
 	}
-	return bot.SendMessage(recipientId, message)
+	return bot.SendMessage(recipientID, message)
 }
 
 // Send quick replies to the specified recipient.
@@ -217,12 +219,12 @@ func (bot *Bot) SendTextMessage(recipientId string, text string) (*http.Response
 // 		quickReplies: an array of QuickReply objects, up to 13 elements
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendQuickReplies(recipientId string, text string, quickReplies []QuickReply) (*http.Response, error) {
+func (bot *Bot) SendQuickReplies(recipientID string, text string, quickReplies []QuickReply) (*http.Response, error) {
 	message := Message{
-		Text:         &text,
+		Text:         text,
 		QuickReplies: &quickReplies,
 	}
-	return bot.SendMessage(recipientId, message)
+	return bot.SendMessage(recipientID, message)
 }
 
 // Send attachment message to the specified recipient.
@@ -233,11 +235,11 @@ func (bot *Bot) SendQuickReplies(recipientId string, text string, quickReplies [
 // 		attachment: an attachment
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendAttachmentMessage(recipientId string, attachment Attachment) (*http.Response, error) {
+func (bot *Bot) SendAttachmentMessage(recipientID string, attachment Attachment) (*http.Response, error) {
 	message := Message{
 		Attachment: &attachment,
 	}
-	return bot.SendMessage(recipientId, message)
+	return bot.SendMessage(recipientID, message)
 }
 
 // Send attachment message to the specified recipient using URL.
@@ -249,12 +251,12 @@ func (bot *Bot) SendAttachmentMessage(recipientId string, attachment Attachment)
 // 		attachmentUrl: url of the attachment
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendAttachmentUrl(recipientId string, attachmentType AttachmentType, attachmentUrl string) (*http.Response, error) {
+func (bot *Bot) SendAttachmentUrl(recipientID string, attachmentType AttachmentType, attachmentUrl string) (*http.Response, error) {
 	attachment := Attachment{
 		Type:    attachmentType,
 		Payload: AttachmentPayload{URL: attachmentUrl},
 	}
-	return bot.SendAttachmentMessage(recipientId, attachment)
+	return bot.SendAttachmentMessage(recipientID, attachment)
 }
 
 // Send generic message to the specified recipient.
@@ -265,7 +267,7 @@ func (bot *Bot) SendAttachmentUrl(recipientId string, attachmentType AttachmentT
 // 		elements: an array of Element objects, can up to 10 elements
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendGenericMessage(recipientId string, elements []Element) (*http.Response, error) {
+func (bot *Bot) SendGenericMessage(recipientID string, elements []Element) (*http.Response, error) {
 	attachment := Attachment{
 		Type: AttachmentTypeTemplate,
 		Payload: AttachmentPayload{
@@ -273,7 +275,7 @@ func (bot *Bot) SendGenericMessage(recipientId string, elements []Element) (*htt
 			Elements:     elements,
 		},
 	}
-	return bot.SendAttachmentMessage(recipientId, attachment)
+	return bot.SendAttachmentMessage(recipientID, attachment)
 }
 
 // Send button message to the specified recipient.
@@ -285,7 +287,7 @@ func (bot *Bot) SendGenericMessage(recipientId string, elements []Element) (*htt
 // 		buttons: An array of Button objects, can up to 3 buttons
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendButtonMessage(recipientId string, text string, buttons []Button) (*http.Response, error) {
+func (bot *Bot) SendButtonMessage(recipientID string, text string, buttons []Button) (*http.Response, error) {
 	attachment := Attachment{
 		Type: AttachmentTypeTemplate,
 		Payload: AttachmentPayload{
@@ -294,7 +296,7 @@ func (bot *Bot) SendButtonMessage(recipientId string, text string, buttons []But
 			Buttons:      buttons,
 		},
 	}
-	return bot.SendAttachmentMessage(recipientId, attachment)
+	return bot.SendAttachmentMessage(recipientID, attachment)
 }
 
 // Send an image message with image url
@@ -305,8 +307,8 @@ func (bot *Bot) SendButtonMessage(recipientId string, text string, buttons []But
 // 		imageUrl: url of the image that we want to send
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendImageUrl(recipientId string, imageUrl string) (*http.Response, error) {
-	return bot.SendAttachmentUrl(recipientId, AttachmentTypeImage, imageUrl)
+func (bot *Bot) SendImageUrl(recipientID string, imageUrl string) (*http.Response, error) {
+	return bot.SendAttachmentUrl(recipientID, AttachmentTypeImage, imageUrl)
 }
 
 // Send an audio message with audio url
@@ -317,8 +319,8 @@ func (bot *Bot) SendImageUrl(recipientId string, imageUrl string) (*http.Respons
 // 		imageUrl: url of the audio to send
 // Output:
 // 		Response from API and and error if exists
-func (bot *Bot) SendAudioUrl(recipientId string, audioUrl string) (*http.Response, error) {
-	return bot.SendAttachmentUrl(recipientId, AttachmentTypeAudio, audioUrl)
+func (bot *Bot) SendAudioUrl(recipientID string, audioUrl string) (*http.Response, error) {
+	return bot.SendAttachmentUrl(recipientID, AttachmentTypeAudio, audioUrl)
 }
 
 // Send a video message with video url
@@ -329,8 +331,8 @@ func (bot *Bot) SendAudioUrl(recipientId string, audioUrl string) (*http.Respons
 // 		videoUrl: url of the video to send
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendVideoUrl(recipientId string, videoUrl string) (*http.Response, error) {
-	return bot.SendAttachmentUrl(recipientId, AttachmentTypeVideo, videoUrl)
+func (bot *Bot) SendVideoUrl(recipientID string, videoUrl string) (*http.Response, error) {
+	return bot.SendAttachmentUrl(recipientID, AttachmentTypeVideo, videoUrl)
 }
 
 // Send file with file url
@@ -341,8 +343,8 @@ func (bot *Bot) SendVideoUrl(recipientId string, videoUrl string) (*http.Respons
 // 		fileUrl: url of the file
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendFileUrl(recipientId string, fileUrl string) (*http.Response, error) {
-	return bot.SendAttachmentUrl(recipientId, AttachmentTypeFile, fileUrl)
+func (bot *Bot) SendFileUrl(recipientID string, fileUrl string) (*http.Response, error) {
+	return bot.SendAttachmentUrl(recipientID, AttachmentTypeFile, fileUrl)
 }
 
 // Set a get started button for the page, this button will be shown on welcome screen for new users

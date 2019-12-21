@@ -64,7 +64,7 @@ type (
 		Type                string `json:"type"`
 		URL                 string `json:"url"`
 		WebViewHeightRatio  string `json:"web_view_height_ratio,omitempty"`
-		MessengerExtensions bool   `json:"messenger_extensions,omitempty"`
+		MessengerExtensions *bool  `json:"messenger_extensions,omitempty"`
 		FallbackURL         string `json:"fallback_url,omitempty"`
 		WebViewShareButton  string `json:"web_view_share_button,omitempty"`
 	}

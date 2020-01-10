@@ -36,12 +36,12 @@ textMessage := "Hello! Can you hear me?"
 bot.sendTextMessage(recipientId, textMessage)
 ```
 ## Usage
-- [VNUChatbot](https://www.facebook.com/vnuchat/) is a chat-with-stranger chatbot, with back-end written in Golang and use this package. 
+- [fb-stranger-bot](https://github.com/imbaggaarm/fb-stranger-bot) is a template project for chat-with-stranger chatbot.
+- [VNUChatbot](https://www.facebook.com/vnuchat/) is a chat-with-stranger chatbot for university students. 
 ## Other
 ### Future of go-messenger
 There are a lot of missing functions in this package, 
 I'm planning to make this better and better in the future. Here are some things will be implemented soon:
-- An example (chat with strangers)
 - Attachment with file messages
 ### Contact
 Follow and contact me on [Twitter](http://twitter.com/baggaarm). If you find an issue, just [open a ticket](https://github.com/imbaggaarm/go-messenger/issues/new). 

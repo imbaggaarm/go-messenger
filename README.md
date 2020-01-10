@@ -27,10 +27,10 @@ go get -u github.com/imbaggaarm/go-messenger
 ```
 ### Example
 ```Go
-import . "github.com/imbaggaarm/go-messenger"
+import messenger "github.com/imbaggaarm/go-messenger"
 
-apiVersion :=  DefaultApiVersion // or the version that you want
-bot = NewBot(accessToken, apiVersion)
+apiVersion :=  messenger.DefaultApiVersion // or the version that you want
+bot = messenger.NewBot(accessToken, apiVersion)
 
 textMessage := "Hello! Can you hear me?"
 bot.sendTextMessage(recipientId, textMessage)

@@ -46,8 +46,8 @@ type EntryMessage struct {
 	GamePlay             *GamePlay          `json:"game_play,omitempty"`
 	PassThreadControl    *Handover          `json:"pass_thread_control,omitempty"`
 	TakeThreadControl    *Handover          `json:"take_thread_control,omitempty"`
-	AppRoles             *interface{}       `json:"app_roles,omitempty"`
-	RequestThreadControl *Handover          `json:"request_threasd_control,omitempty"`
+	AppRoles             interface{}        `json:"app_roles,omitempty"`
+	RequestThreadControl *Handover          `json:"request_thread_control,omitempty"`
 	Optin                *Optin             `json:"optin,omitempty"`
 	PolicyEnforcement    *PolicyEnforcement `json:"policy_enforcement,omitempty"`
 	Postback             *Postback          `json:"postback,omitempty"`

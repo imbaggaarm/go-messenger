@@ -1,4 +1,4 @@
-# go-messenger [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+# go-messenger [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GitHub version](https://badge.fury.io/gh/imbaggaarm%2Fgo-messenger.svg)](https://badge.fury.io/gh/imbaggaarm%2Fgo-messenger)
 A [Facebook Messenger API](https://developers.facebook.com/docs/messenger-platform) wrapper written in Golang,
 alternative to pymessenger.
 

@@ -35,6 +35,8 @@ bot = messenger.NewBot(accessToken, apiVersion)
 textMessage := "Hello! Can you hear me?"
 bot.sendTextMessage(recipientId, textMessage)
 ```
+## Usage
+- [VNUChatbot](https://www.facebook.com/vnuchat/) is a chat-with-stranger chatbot, with back-end written in Golang and use this package. 
 ## Other
 ### Future of go-messenger
 There are a lot of missing functions in this package, 

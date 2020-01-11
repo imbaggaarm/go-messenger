@@ -220,9 +220,10 @@ func (bot *Bot) SendTextMessage(recipientID string, text string) (*http.Response
 // 		quickReplies: an array of QuickReply objects, up to 13 elements
 // Output:
 // 		Response from API and an error if exists
-func (bot *Bot) SendQuickReplies(recipientID string, text string, quickReplies []QuickReply) (*http.Response, error) {
+func (bot *Bot) SendQuickReplies(recipientID string, text string, attachment Attachment, quickReplies []QuickReply) (*http.Response, error) {
 	message := Message{
 		Text:         text,
+		Attachment:   &attachment,
 		QuickReplies: quickReplies,
 	}
 	return bot.SendMessage(recipientID, message)

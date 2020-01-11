@@ -24,6 +24,7 @@ const (
 	NotificationTypeRegular    = NotificationType("REGULAR")
 	NotificationTypeSilentPush = NotificationType("SILENT_PUSH")
 	NotificationNoPush         = NotificationType("NO_PUSH")
+	NotificationEmpty          = NotificationType("")
 
 	SenderActionMarkSeen  = SenderAction("mark_seen")
 	SenderActionTypingOn  = SenderAction("typing_on")

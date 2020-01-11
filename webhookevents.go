@@ -42,7 +42,7 @@ type EntryMessage struct {
 
 	Message              *WebhookMessage    `json:"message,omitempty"` // represent for messages event and message_echoes event
 	AccountLinking       *AccountLinking    `json:"account_linking,omitempty"`
-	MessageDelivery      *MessageDelivery   `json:"message_delivery,omitempty"`
+	MessageDelivery      *MessageDelivery   `json:"delivery,omitempty"`
 	GamePlay             *GamePlay          `json:"game_play,omitempty"`
 	PassThreadControl    *Handover          `json:"pass_thread_control,omitempty"`
 	TakeThreadControl    *Handover          `json:"take_thread_control,omitempty"`
@@ -52,7 +52,7 @@ type EntryMessage struct {
 	PolicyEnforcement    *PolicyEnforcement `json:"policy_enforcement,omitempty"`
 	Postback             *Postback          `json:"postback,omitempty"`
 	Reaction             *Reaction          `json:"reaction,omitempty"`
-	MessageRead          *MessageRead       `json:"message_read,omitempty"`
+	MessageRead          *MessageRead       `json:"read,omitempty"`
 	Referral             *Referral          `json:"referral,omitempty"`
 }
 

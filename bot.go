@@ -4,7 +4,6 @@ package messenger
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -91,9 +90,6 @@ func NewBot(accessToken string, apiVersion string) *Bot {
 // Output:
 // 		Response from API and an error if exists
 func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (*http.Response, error) {
-
-	fmt.Println("--------------------")
-	defer fmt.Println("--------------------")
 	// Create request endpoint with given sub path
 	requestEndpoint := bot.GraphUrl + requestSubPath
 
@@ -107,9 +103,6 @@ func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (
 		log.Println(err.Error())
 		return nil, err
 	}
-
-	jsonPayload, _ := json.MarshalIndent(payload, "", "\t")
-	fmt.Println(string(jsonPayload))
 
 	req, _ := http.NewRequest(method, requestEndpoint, body)
 	req.Header.Add("Content-Type", "application/json")

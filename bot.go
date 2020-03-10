@@ -50,9 +50,9 @@ type (
 	}
 
 	PersistentMenu struct {
-		Locale                string   `json:"locale"`
-		ComposerInputDisabled bool     `json:"composer_input_disabled"`
-		CallToActions         []Button `json:"call_to_actions"`
+		Locale                string        `json:"locale"`
+		ComposerInputDisabled bool          `json:"composer_input_disabled"`
+		CallToActions         []interface{} `json:"call_to_actions"`
 	}
 )
 

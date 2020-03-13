@@ -4,6 +4,7 @@ package messenger
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -18,7 +19,7 @@ type (
 const (
 	kGraphUrl         = "https://graph.facebook.com/v"
 	kAccessToken      = "access_token"
-	DefaultApiVersion = "2.6"
+	DefaultApiVersion = "6.0"
 
 	NotificationTypeRegular    = NotificationType("REGULAR")
 	NotificationTypeSilentPush = NotificationType("SILENT_PUSH")
@@ -50,9 +51,9 @@ type (
 	}
 
 	PersistentMenu struct {
-		Locale                string   `json:"locale"`
-		ComposerInputDisabled bool     `json:"composer_input_disabled"`
-		CallToActions         []Button `json:"call_to_actions"`
+		Locale                string        `json:"locale"`
+		ComposerInputDisabled bool          `json:"composer_input_disabled"`
+		CallToActions         []interface{} `json:"call_to_actions"`
 	}
 )
 
@@ -90,12 +91,17 @@ func NewBot(accessToken string, apiVersion string) *Bot {
 // Output:
 // 		Response from API and an error if exists
 func (bot *Bot) sendRaw(requestSubPath string, method string, payload Payload) (*http.Response, error) {
+	fmt.Println("--------------------")
+	defer fmt.Println("--------------------")
 	// Create request endpoint with given sub path
 	requestEndpoint := bot.GraphUrl + requestSubPath
 
 	client := &http.Client{
 		Timeout: time.Second * 10,
 	}
+
+	jsonPayload, _ := json.MarshalIndent(payload, "", "  ")
+	fmt.Println(string(jsonPayload))
 
 	// Encode the payload into request body
 	body := new(bytes.Buffer)

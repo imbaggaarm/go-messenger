@@ -43,6 +43,7 @@ type (
 		Elements     []Element    `json:"elements,omitempty"`
 		Buttons      []Button     `json:"buttons,omitempty"`
 		URL          string       `json:"url,omitempty"`
+		StickerID    *int         `json:"sticker_id,omitempty"`
 	}
 
 	Button struct {
